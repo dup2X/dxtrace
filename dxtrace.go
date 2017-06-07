@@ -23,7 +23,7 @@ func init() {
 						continue
 					}
 					var head = []byte("SCHED")
-					Test(append(head, datas[i]...))
+					report(append(head, datas[i]...))
 				}
 			}
 			os.Truncate(tmpPath, 0)
@@ -33,8 +33,7 @@ func init() {
 
 var tmpPath = "/tmp/xdebug"
 
-// Test just for demo
-func Test(data []byte) {
+func report(data []byte) {
 	parser := &textParser{}
 	r, err := parser.Parse(data)
 	if err != nil {
