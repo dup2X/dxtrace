@@ -188,17 +188,14 @@ func (r *record) gfill(glines [][]byte) {
 			continue
 		}
 		var _g = g{}
-		fmt.Printf("gline=%s\n", string(glines[i]))
 		index1 := bytes.Index(glines[i], []byte("("))
 		index2 := bytes.LastIndex(glines[i], []byte(")"))
 		if index2 > index1 {
 			_g.waitreason = string(glines[i][index1+1 : index2])
 			glines[i] = append(glines[i][:index1], glines[i][index2+1:]...)
 		}
-		fmt.Printf("gline=%s\n", string(glines[i]))
 		secs := bytes.Split(glines[i], []byte(" "))
-		for idx := range secs {
-			fmt.Printf("sec=%s\n", string(secs[idx]))
+		for idx := 2; idx < len(secs); idx++ {
 			index := bytes.Index(secs[idx], []byte("="))
 			if index > 0 {
 				switch string(secs[idx][:index]) {
@@ -209,7 +206,7 @@ func (r *record) gfill(glines [][]byte) {
 				case "lockedm":
 					_g.lockedm, _ = strconv.ParseInt(string(secs[idx][index+1:]), 10, 64)
 				}
-			} else if index == 0 {
+			} else if idx == 2 && len(secs[idx]) > 0 {
 				index = bytes.Index(secs[idx], []byte(":"))
 				_g.goid, _ = strconv.ParseInt(string(secs[idx][1:index]), 10, 64)
 			}
